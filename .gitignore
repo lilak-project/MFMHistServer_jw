@@ -1,5 +1,10 @@
 document
 .for
+run_*
+
+#exe
+*.exe
+*.sim
 
 #python
 __pycache__

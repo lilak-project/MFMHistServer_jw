@@ -347,11 +347,11 @@ void HistServer::Init(int mode, int d2pmode) {
     spectra_->AddSpectrum(hMM_EstripL,Form("ICEnergy2D"));
     spectra_->AddSpectrum(hMM_EstripR,Form("ICEnergy2D"));
     spectra_->AddSpectrum(hMM_EstripAll,Form("ICEnergy2D"));
-    hMM_TimevsPxIDXPosAll = new TH2D(Form("hMM_TimevsPxIDXPosAll"),Form("All Events Time vs Position X in the Micromega;X (mm);Time (%dns/bin)",fTimePerBin),300,-150,150,512,0,512);
-    hMM_TimevsPxIDYPosAll = new TH2D(Form("hMM_TimevsPxIDYPosAll"),Form("All Events Time vs Position Y in the Micromega;Y (mm);Time (%dns/bin)",fTimePerBin),700,-300,400,512,0,512);
+    hMM_TimevsPxIDXPosAll = new TH2D(Form("hMM_TimevsPxIDXPosAll"),Form("All Events Time vs Position X in the Micromega;X (mm);Time (%dns/bin)",int(fTimePerBin)),300,-150,150,512,0,512);
+    hMM_TimevsPxIDYPosAll = new TH2D(Form("hMM_TimevsPxIDYPosAll"),Form("All Events Time vs Position Y in the Micromega;Y (mm);Time (%dns/bin)",int(fTimePerBin)),700,-300,400,512,0,512);
     spectra_->AddSpectrum(hMM_TimevsPxIDXPosAll,Form("TracksPos_All"));
     spectra_->AddSpectrum(hMM_TimevsPxIDYPosAll,Form("TracksPos_All"));
-    hMM_TimevsPxIDYAll = new TH2D(Form("hMM_TimevsPxIDYAll"),Form("All Events Time vs Pixel Y in the Micromega;Y (pixel);Time (%dns/bin)",fTimePerBin),170,0,170,512,0,512);
+    hMM_TimevsPxIDYAll = new TH2D(Form("hMM_TimevsPxIDYAll"),Form("All Events Time vs Pixel Y in the Micromega;Y (pixel);Time (%dns/bin)",int(fTimePerBin)),170,0,170,512,0,512);
     spectra_->AddSpectrum(hMM_TimevsPxIDYAll,Form("Tracks_All"));
     hMM_EnergyvsPxIDYALL = new TH2D(Form("hMM_EnergyvsPxIDYALL"),Form("All Event Energy vs Pixel Y in the Central Pad Micromega;Y (pixel);Energy (ADC Channel)"),150,0,150,4000,0,4000);
     spectra_->AddSpectrum(hMM_EnergyvsPxIDYALL,Form("Tracks_Energy2D"));
@@ -379,17 +379,17 @@ void HistServer::Init(int mode, int d2pmode) {
       hMM_TrackPosXY[i] = new TH2D(Form("hMM_TrackPosXY_%d",i),Form("Single Event Track Pos Y vs Pos X;X (mm);Y (mm)"),300,-150,150,700,-300,400);
       hMM_TrackPosXZ[i] = new TH2D(Form("hMM_TrackPosXZ_%d",i),Form("Single Event Track Pos Z vs Pos X;X (mm);Z (mm)"),300,-150,150,130,0,130);
       hMM_TrackPosYZ[i] = new TH2D(Form("hMM_TrackPosYZ_%d",i),Form("Single Event Track Pos Z vs Pos Y;Y (mm);Z (mm)"),700,-300,400,130,0,130);
-      hMM_TimevsPxIDX[i] = new TH2D(Form("hMM_TimevsPxIDX_%d",i),Form("Single Event Time vs Pixel X in the Micromega;X (pixel);Time (%dns/bin)",fTimePerBin),150,0,150,512,0,512);
-      hMM_TimevsPxIDXPos[i] = new TH2D(Form("hMM_TimevsPxIDXPos_%d",i),Form("Single Event Time vs Position X in the Micromega;X (mm);Time (%dns/bin)",fTimePerBin),300,-150,150,512,0,512);
+      hMM_TimevsPxIDX[i] = new TH2D(Form("hMM_TimevsPxIDX_%d",i),Form("Single Event Time vs Pixel X in the Micromega;X (pixel);Time (%dns/bin)",int(fTimePerBin)),150,0,150,512,0,512);
+      hMM_TimevsPxIDXPos[i] = new TH2D(Form("hMM_TimevsPxIDXPos_%d",i),Form("Single Event Time vs Position X in the Micromega;X (mm);Time (%dns/bin)",int(fTimePerBin)),300,-150,150,512,0,512);
       for(int j=0;j<3;j++){
         hMM_TimevsPxIDXPosHough[i][j] = new TH2D(Form("hMM_TimevsPxIDXPosHough_%d_%d",i,j),Form("Single Event Hough Space from Time vs Pos X %d_%d;Theta (deg);Radius (mm)",i,j),1800,0,180,1000,-500,500);
         hMM_TimevsPxIDYPosHough[i][j] = new TH2D(Form("hMM_TimevsPxIDYPosHough_%d_%d",i,j),Form("Single Event Hough Space from Time vs Pos Y %d_%d;Theta (deg);Radius (mm)",i,j),1800,0,180,1000,-400,600);
       }
-      hMM_TimevsPxIDY[i] = new TH2D(Form("hMM_TimevsPxIDY_%d",i),Form("Single Event Time vs Pixel Y in the Micromega;Y (pixel);Time (%dns/bin)",fTimePerBin),170,0,170,512,0,512);
-      hMM_TimevsPxIDYPos[i] = new TH2D(Form("hMM_TimevsPxIDYPos_%d",i),Form("Single Event Time vs Position Y in the Micromega;Y (mm);Time (%dns/bin)",fTimePerBin),700,-300,400,512,0,512);
+      hMM_TimevsPxIDY[i] = new TH2D(Form("hMM_TimevsPxIDY_%d",i),Form("Single Event Time vs Pixel Y in the Micromega;Y (pixel);Time (%dns/bin)",int(fTimePerBin)),170,0,170,512,0,512);
+      hMM_TimevsPxIDYPos[i] = new TH2D(Form("hMM_TimevsPxIDYPos_%d",i),Form("Single Event Time vs Position Y in the Micromega;Y (mm);Time (%dns/bin)",int(fTimePerBin)),700,-300,400,512,0,512);
       hMM_EnergyvsPxIDY[i] = new TH2D(Form("hMM_EnergyvsPxIDY_%d",i),Form("Single Event Energy vs Pixel Y in the Micromega;Y (pixel);Energy (ADC Channel)"),150,0,150,4000,0,4000);
       hMM_SumEnergyvsPxIDY[i] = new TH1I(Form("hMM_SumEnergyvsPxIDY_%d",i),Form("Single Event Sum Energy vs Pixel Y in the Micromega;Y (pixel);Sum Energy (ADC Channel)"),150,0,150);
-      hMM_Time[i] = new TH1D(Form("hMM_Time_%d",i),Form("Single Event Time_%d;Time (%dns/bin);Counts",i,fTimePerBin),512,0,512);
+      hMM_Time[i] = new TH1D(Form("hMM_Time_%d",i),Form("Single Event Time_%d;Time (%dns/bin);Counts",i,int(fTimePerBin)),512,0,512);
       hMM_Energy[i] = new TH1D(Form("hMM_Energy_%d",i),Form("Single Event Energy_%d;Energy (ADC Channel);Counts",i),4000,0,4000);
       spectra_->AddSpectrum(hMM_Track[i],Form("Tracks"));
       spectra_->AddSpectrum(hMM_TrackDecay[i],Form("DecayTracks"));
@@ -612,11 +612,11 @@ void HistServer::Init(int mode, int d2pmode) {
     spectra_->AddSpectrum(hMM_EstripL,Form("ICEnergy2D"));
     spectra_->AddSpectrum(hMM_EstripR,Form("ICEnergy2D"));
     spectra_->AddSpectrum(hMM_EstripAll,Form("ICEnergy2D"));
-    hMM_TimevsPxIDXPosAll = new TH2D(Form("hMM_TimevsPxIDXPosAll"),Form("All Events Time vs Position X in the Micromega;X (mm);Time (%dns/bin)",fTimePerBin),300,-150,150,512,0,512);
-    hMM_TimevsPxIDYPosAll = new TH2D(Form("hMM_TimevsPxIDYPosAll"),Form("All Events Time vs Position Y in the Micromega;Y (mm);Time (%dns/bin)",fTimePerBin),700,-300,400,512,0,512);
+    hMM_TimevsPxIDXPosAll = new TH2D(Form("hMM_TimevsPxIDXPosAll"),Form("All Events Time vs Position X in the Micromega;X (mm);Time (%dns/bin)",int(fTimePerBin)),300,-150,150,512,0,512);
+    hMM_TimevsPxIDYPosAll = new TH2D(Form("hMM_TimevsPxIDYPosAll"),Form("All Events Time vs Position Y in the Micromega;Y (mm);Time (%dns/bin)",int(fTimePerBin)),700,-300,400,512,0,512);
     spectra_->AddSpectrum(hMM_TimevsPxIDXPosAll,Form("TracksPos_All"));
     spectra_->AddSpectrum(hMM_TimevsPxIDYPosAll,Form("TracksPos_All"));
-    hMM_TimevsPxIDYAll = new TH2D(Form("hMM_TimevsPxIDYAll"),Form("All Events Time vs Pixel Y in the Micromega;Y (pixel);Time (%dns/bin)",fTimePerBin),170,0,170,512,0,512);
+    hMM_TimevsPxIDYAll = new TH2D(Form("hMM_TimevsPxIDYAll"),Form("All Events Time vs Pixel Y in the Micromega;Y (pixel);Time (%dns/bin)",int(fTimePerBin)),170,0,170,512,0,512);
     spectra_->AddSpectrum(hMM_TimevsPxIDYAll,Form("Tracks_All"));
     hMM_EnergyvsPxIDYALL = new TH2D(Form("hMM_EnergyvsPxIDYALL"),Form("All Event Energy vs Pixel Y in the Central Pad Micromega;Y (pixel);Energy (ADC Channel)"),150,0,150,4000,0,4000);
     spectra_->AddSpectrum(hMM_EnergyvsPxIDYALL,Form("Tracks_Energy2D"));
@@ -644,17 +644,17 @@ void HistServer::Init(int mode, int d2pmode) {
       hMM_TrackPosXY[i] = new TH2D(Form("hMM_TrackPosXY_%d",i),Form("Single Event Track Pos Y vs Pos X;X (mm);Y (mm)"),300,-150,150,700,-300,400);
       hMM_TrackPosXZ[i] = new TH2D(Form("hMM_TrackPosXZ_%d",i),Form("Single Event Track Pos Z vs Pos X;X (mm);Z (mm)"),300,-150,150,130,0,130);
       hMM_TrackPosYZ[i] = new TH2D(Form("hMM_TrackPosYZ_%d",i),Form("Single Event Track Pos Z vs Pos Y;Y (mm);Z (mm)"),700,-300,400,130,0,130);
-      hMM_TimevsPxIDX[i] = new TH2D(Form("hMM_TimevsPxIDX_%d",i),Form("Single Event Time vs Pixel X in the Micromega;X (pixel);Time (%dns/bin)",fTimePerBin),150,0,150,512,0,512);
-      hMM_TimevsPxIDXPos[i] = new TH2D(Form("hMM_TimevsPxIDXPos_%d",i),Form("Single Event Time vs Position X in the Micromega;X (mm);Time (%dns/bin)",fTimePerBin),300,-150,150,512,0,512);
+      hMM_TimevsPxIDX[i] = new TH2D(Form("hMM_TimevsPxIDX_%d",i),Form("Single Event Time vs Pixel X in the Micromega;X (pixel);Time (%dns/bin)",int(fTimePerBin)),150,0,150,512,0,512);
+      hMM_TimevsPxIDXPos[i] = new TH2D(Form("hMM_TimevsPxIDXPos_%d",i),Form("Single Event Time vs Position X in the Micromega;X (mm);Time (%dns/bin)",int(fTimePerBin)),300,-150,150,512,0,512);
       for(int j=0;j<3;j++){
         hMM_TimevsPxIDXPosHough[i][j] = new TH2D(Form("hMM_TimevsPxIDXPosHough_%d_%d",i,j),Form("Single Event Hough Space from Time vs Pos X %d_%d;Theta (deg);Radius (mm)",i,j),1800,0,180,1000,-500,500);
         hMM_TimevsPxIDYPosHough[i][j] = new TH2D(Form("hMM_TimevsPxIDYPosHough_%d_%d",i,j),Form("Single Event Hough Space from Time vs Pos Y %d_%d;Theta (deg);Radius (mm)",i,j),1800,0,180,1000,-400,600);
       }
-      hMM_TimevsPxIDY[i] = new TH2D(Form("hMM_TimevsPxIDY_%d",i),Form("Single Event Time vs Pixel Y in the Micromega;Y (pixel);Time (%dns/bin)",fTimePerBin),170,0,170,512,0,512);
-      hMM_TimevsPxIDYPos[i] = new TH2D(Form("hMM_TimevsPxIDYPos_%d",i),Form("Single Event Time vs Position Y in the Micromega;Y (mm);Time (%dns/bin)",fTimePerBin),700,-300,400,512,0,512);
+      hMM_TimevsPxIDY[i] = new TH2D(Form("hMM_TimevsPxIDY_%d",i),Form("Single Event Time vs Pixel Y in the Micromega;Y (pixel);Time (%dns/bin)",int(fTimePerBin)),170,0,170,512,0,512);
+      hMM_TimevsPxIDYPos[i] = new TH2D(Form("hMM_TimevsPxIDYPos_%d",i),Form("Single Event Time vs Position Y in the Micromega;Y (mm);Time (%dns/bin)",int(fTimePerBin)),700,-300,400,512,0,512);
       hMM_EnergyvsPxIDY[i] = new TH2D(Form("hMM_EnergyvsPxIDY_%d",i),Form("Single Event Energy vs Pixel Y in the Micromega;Y (pixel);Energy (ADC Channel)"),150,0,150,4000,0,4000);
       hMM_SumEnergyvsPxIDY[i] = new TH1I(Form("hMM_SumEnergyvsPxIDY_%d",i),Form("Single Event Sum Energy vs Pixel Y in the Micromega;Y (pixel);Sum Energy (ADC Channel)"),150,0,150);
-      hMM_Time[i] = new TH1D(Form("hMM_Time_%d",i),Form("Single Event Time_%d;Time (%dns/bin);Counts",i,fTimePerBin),512,0,512);
+      hMM_Time[i] = new TH1D(Form("hMM_Time_%d",i),Form("Single Event Time_%d;Time (%dns/bin);Counts",i,int(fTimePerBin)),512,0,512);
       hMM_Energy[i] = new TH1D(Form("hMM_Energy_%d",i),Form("Single Event Energy_%d;Energy (ADC Channel);Counts",i),4000,0,4000);
       spectra_->AddSpectrum(hMM_Track[i],Form("Tracks"));
       spectra_->AddSpectrum(hMM_TrackDecay[i],Form("DecayTracks"));
@@ -4258,13 +4258,13 @@ void HistServer::ChangeTrackHistTitle(){
   hMM_TrackvsE[goodevtcounter%16]->SetTitle(Form("Single Event of (X6:%d %d %d %d) (%d) Track vs E;Cell ID X;Cell ID Y [goodevtcounter=%d]",si_tracks->hasX6L,si_tracks->hasX6R,si_tracks->hasX6BL,si_tracks->hasX6BR,reventIdx,goodevtcounter));
   hMM_TrackDecay[goodevtcounter%16]->SetTitle(Form("Single Event Decay Track by channels;Cell ID X [D2PTime=%d usec];Cell ID Y [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
   hMM_TrackDecay2[goodevtcounter%16]->SetTitle(Form("Single Event Decay Track by channels;Cell ID X [D2PTime=%d usec];Cell ID Y [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TrackPos[goodevtcounter%16]->SetTitle(Form("Single Event Track by Position;Pos X (mm) [D2PTime=%d usec];Pos Y (mm) [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TrackPosXY[goodevtcounter%16]->SetTitle(Form("Single Event Track Pos Y vs Pos X;Pos X (mm) [D2PTime=%d usec];Pos Y (mm) [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TimevsPxIDX[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pixel X;Cell ID X [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TimevsPxIDXPos[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pos X;Pos X (mm) [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TimevsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pixel Y;Cell ID Y [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TimevsPxIDYPos[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pos Y;Pos Y (mm) [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_EnergyvsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Energy vs Pixel Y;Cell ID Y [D2PTime=%d usec];Energy [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TrackPos[goodevtcounter%16]->SetTitle(Form("Single Event Track by Position;Pos X (mm) [D2PTime=%d usec];Pos Y (mm) [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TrackPosXY[goodevtcounter%16]->SetTitle(Form("Single Event Track Pos Y vs Pos X;Pos X (mm) [D2PTime=%d usec];Pos Y (mm) [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TimevsPxIDX[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pixel X;Cell ID X [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TimevsPxIDXPos[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pos X;Pos X (mm) [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TimevsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pixel Y;Cell ID Y [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TimevsPxIDYPos[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pos Y;Pos Y (mm) [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_EnergyvsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Energy vs Pixel Y;Cell ID Y [D2PTime=%d usec];Energy [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
   hMM_SumEnergyvsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Sum Energy vs Pixel Y;Cell ID Y;Energy [EventNo=%d]",reventIdx));
 }
 
@@ -4696,13 +4696,13 @@ void HistServer::ResetTrackHist(){
   hMM_TrackvsE[goodevtcounter%16]->SetTitle(Form("Single Event Track vs E;Cell ID X;Cell ID Y [EventNo=%d, goodevtcounter=%d]",reventIdx,goodevtcounter));
   hMM_TrackDecay[goodevtcounter%16]->SetTitle(Form("Single Event Decay Track by channels;Cell ID X [D2PTime=%d usec];Cell ID Y [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
   hMM_TrackDecay2[goodevtcounter%16]->SetTitle(Form("Single Event Decay Track by channels;Cell ID X [D2PTime=%d usec];Cell ID Y [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TrackPos[goodevtcounter%16]->SetTitle(Form("Single Event Track by Position;Pos X (mm) [D2PTime=%d usec];Pos Y (mm) [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TrackPosXY[goodevtcounter%16]->SetTitle(Form("Single Event Track Pos Y vs Pos X;Pos X (mm) [D2PTime=%d usec];Pos Y (mm) [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TimevsPxIDX[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pixel X;Cell ID X [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TimevsPxIDXPos[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pos X;Pos X (mm) [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TimevsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pixel Y;Cell ID Y [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_TimevsPxIDYPos[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pos Y;Pos Y (mm) [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
-  hMM_EnergyvsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Energy vs Pixel Y;Cell ID Y [D2PTime=%d usec];Energy [FrameNo~%d, EventNo=%d, goodevtcounter=%d, D2PTime=%d usec]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TrackPos[goodevtcounter%16]->SetTitle(Form("Single Event Track by Position;Pos X (mm) [D2PTime=%d usec];Pos Y (mm) [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TrackPosXY[goodevtcounter%16]->SetTitle(Form("Single Event Track Pos Y vs Pos X;Pos X (mm) [D2PTime=%d usec];Pos Y (mm) [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TimevsPxIDX[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pixel X;Cell ID X [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TimevsPxIDXPos[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pos X;Pos X (mm) [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TimevsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pixel Y;Cell ID Y [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_TimevsPxIDYPos[goodevtcounter%16]->SetTitle(Form("Single Event Time vs Pos Y;Pos Y (mm) [D2PTime=%d usec];Time Bucket [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
+  hMM_EnergyvsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Energy vs Pixel Y;Cell ID Y [D2PTime=%d usec];Energy [FrameNo~%d, EventNo=%d, goodevtcounter=%d]",int(rd2ptime/1000),(reventIdx-FirsteventIdx+2),reventIdx,goodevtcounter));
   hMM_SumEnergyvsPxIDY[goodevtcounter%16]->SetTitle(Form("Single Event Sum Energy vs Pixel Y;Cell ID Y;Energy [EventNo=%d]",reventIdx));
   hMM_SumEnergyvsPxIDY[goodevtcounter%16]->SetFillStyle(3001);
   hMM_SumEnergyvsPxIDY[goodevtcounter%16]->SetFillColor(kMagenta+3);
