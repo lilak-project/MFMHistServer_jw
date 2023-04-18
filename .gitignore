@@ -1,0 +1,51 @@
+document
+.for
+
+#python
+__pycache__
+
+#geometry file
+*.gdml
+
+#build
+build
+*.swp
+*.o
+
+#simulation/analysis data
+*.out
+data
+*.root
+*.graw
+
+#mac
+.AppleDouble
+.DS_Store
+
+#geant4 executable
+*.g4sim
+
+#log files created from build/run
+log/*
+*.log
+
+#cmake configuration log files
+!log/*.in
+
+#documetation directory(doxygen)
+doc
+
+#temporary directories
+temp
+temp*/
+
+#figures
+figures/
+*.pdf
+*.png
+*.eps
+*.jpg
+*.jpeg
+
+#trash
+trash
