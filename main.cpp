@@ -1,3 +1,4 @@
+#define DB_LOCATION
 #include <stdio.h>      /* for printf() and fprintf() */
 #include <stdlib.h>     /* for malloc */
 #include <ncurses.h>    /* for getch() */
@@ -504,6 +505,13 @@ int main (int argc, char **argv)
     maxinfidx -= 2;
   }
 
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " #After Init" << endl;
+#endif
+
+  if (1) {
+    outrfname = "/home/cens-alpha-00/ejungwoo/mfm_converter/test1.root";
+  }
   if(ScalerMode==0){
     outrfname = "/home/cens-alpha-00/MFMHistServer/online2.root";
     inoutrfname = "/home/cens-alpha-00/MFMHistServer/online2_et.root";
@@ -518,6 +526,10 @@ int main (int argc, char **argv)
   outrtname = "TEvent";
   inoutrtname = "TEvent";
 
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " #After file name configuration" << endl;
+#endif
+
   int sock;                    /* Socket descriptor */
   struct sockaddr_in servAddr; /* server address */
   int size_buffer;
@@ -530,10 +542,16 @@ int main (int argc, char **argv)
   int oflcnt=0;
   cout<<"MODE: "<<mode<<"\t\tREAD TYPE:\t"<<readtype<<"\tROOTCONVERT:\t"<<RootConvert<<endl;
   if(mode==0 || mode==1){
+#ifdef DB_LOCATION
+    cout<< __FILE__ << " +" << __LINE__ << " #mode 1" << endl;
+#endif
     //cout<<"root file name="<< outrfname << ", root tree name=" << outrtname << endl;
     if(RootConvert==0) convServer->RootWOpenFile(outrfname, outrtname);
     while(keyinput=='r'){
       if(readtype==0){
+#ifdef DB_LOCATION
+      cout<< __FILE__ << " +" << __LINE__ << " #while(r) readtype==0" << endl;
+#endif
         if(RootConvert==0 && onlcnt==0){
           convServer->RootWInit();
         }
@@ -592,6 +610,9 @@ int main (int argc, char **argv)
         onlcnt++;
    
       }else if(readtype==1 || readtype==2 || readtype==10){
+#ifdef DB_LOCATION
+      cout<< __FILE__ << " +" << __LINE__ << " #while(r) readtype==1 2 10" << endl;
+#endif
         if(readtype==1 || readtype==2){
           if(numfiles==1){
             infname=mfmfilename;
@@ -627,11 +648,15 @@ int main (int argc, char **argv)
 	if(mode==0){
           convServer->RootWInit();
 	}else if(mode==1){
+#ifdef DB_LOCATION
+          cout<< __FILE__ << " +" << __LINE__ << " #while(r) readtype==1 START  RootConvert=" << RootConvert << endl;
+#endif
           if(RootConvert==0){
             convServer->RootWInit();
           }
           if(RootConvert==1){
-            outrfname = infname+".root";
+            //outrfname = infname+".root";
+            outrfname = "test2.root";
 	    //outrfname.replace(5,9,"CRIBdisk");
 	    //outrfname.replace(5,5,"disk01");
             cout<<"root file name="<< outrfname << ", root tree name=" << outrtname << endl;
@@ -639,6 +664,9 @@ int main (int argc, char **argv)
             convServer->RootWInit();
             convServer->SetRootConverter(RootConvert);
           }
+#ifdef DB_LOCATION
+          cout<< __FILE__ << " +" << __LINE__ << " #while(r) readtype==1 END" << endl;
+#endif
         }
 	if(readtype==10){
           size_buffer = 32;
@@ -657,6 +685,9 @@ int main (int argc, char **argv)
         in.close();
   
         if(d2pMode==1){
+#ifdef DB_LOCATION
+          cout<< __FILE__ << " +" << __LINE__ << " # d2pMode" << endl;
+#endif
           minfname=mfmfilename;
           size_t f = minfname.find("/run/");
           minfname.replace(f, std::string("/run/").length(), "/run/mutant/");
@@ -685,7 +716,14 @@ int main (int argc, char **argv)
 	char *buffer = (char *) malloc (matrixSize);
 	cout<<"READ BUFFERS, matrixSize was "<< 4*68*512*sizeof(double) <<endl;
         in.open(infname.c_str(),std::ios::binary | std::ios::in);
+#ifdef DB_LOCATION
+          cout<< __FILE__ << " +" << __LINE__ << " # before while(!in.eof())" << endl;
+#endif
         while(!in.eof()) {
+#ifdef DB_LOCATION
+          cout<< __FILE__ << " +" << __LINE__ << " # INWHILE in while(!in.eof()) " << currit << endl;
+#endif
+
           //in.read(buffer,size_buffer);
 	  int filebuffer=0;
 	  in.seekg(filebuffer, std::ios_base::cur);
@@ -717,13 +755,16 @@ int main (int argc, char **argv)
             }
             oflcnt++;
             currit=maxit;
-            cout << Form("100% (%d/%d) Processed..",currit,maxit) << endl;
+            cout << Form("100%s (%d/%d) Processed..","%",currit,maxit) << endl;
 	    if(mode==1){
               //if(RootConvert==1) convServer->RootWCloseFile();
               convServer->RootWCloseFile();
             }
           }
         }
+#ifdef DB_LOCATION
+          cout<< __FILE__ << " +" << __LINE__ << " # end of while(!in.eof())" << endl;
+#endif
         in.close();
         if(mode==1){
           if(readtype==14){
@@ -818,7 +859,7 @@ int main (int argc, char **argv)
             }
             oflcnt++;
             currit=maxit;
-            cout << Form("Reading %d/%d file: 100% (%d/%d) Processed..",(infidx+1),(maxinfidx+1),currit,maxit) << endl;
+            cout << Form("Reading %d/%d file: 100%s (%d/%d) Processed..",(infidx+1),(maxinfidx+1),"%",currit,maxit) << endl;
 	    if(mode==1){
               //if(RootConvert==1) convServer->RootWCloseFile();
               convServer->RootWCloseFile();
@@ -845,6 +886,9 @@ int main (int argc, char **argv)
       }
     }
   
+#ifdef DB_LOCATION
+    cout<< __FILE__ << " +" << __LINE__ << " #end of mode 1" << endl;
+#endif
     delete convServer;
     return 0;
   }else if(mode==2){

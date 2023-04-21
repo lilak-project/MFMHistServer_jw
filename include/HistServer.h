@@ -424,7 +424,7 @@ protected:
   UInt_t bmpos; //BM Position
   UInt_t bmsum1; //BM Energy by position ratio
   UInt_t bmsum2; //BM Energy by sig_sum
-  UInt_t weventIdx;
+  UInt_t eventID; //weventIdx;
   UInt_t weventTime;
   UInt_t goodsievt;
   UInt_t goodmmevt;

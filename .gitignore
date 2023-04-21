@@ -1,6 +1,7 @@
 document
 .for
 run_*
+*json.nc
 
 #exe
 *.exe

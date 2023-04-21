@@ -1,3 +1,8 @@
+#define DB_LOCATION
+#define DB_FUNCTION
+#define DB_EVENTID
+#define EVENT_BREAK
+
 #include "HistServer.h"
 #include "GSpectra.h"
 #include "GNetServerRoot.h"
@@ -99,6 +104,9 @@ HistServer::~HistServer() {
 }
 
 void HistServer::processFrame(mfm::Frame &frame) {
+#ifdef DB_FUNCTION
+  cout << "[processFrame]" << endl;
+#endif
   //cout << "isBlobFrame=" << frame.header().isBlobFrame() << ", frameType=" << frame.header().frameType() << endl;
   if (frame.header().isBlobFrame()) {
     if (frame.header().frameType() == 0x7) {
@@ -130,6 +138,9 @@ void HistServer::processFrame(mfm::Frame &frame) {
 }
 
 void HistServer::Init(int mode, int d2pmode) {
+#ifdef DB_FUNCTION
+  cout << "[Init]" << endl;
+#endif
   //cout<<"INIT HIST SERVER"<<endl;
   framecounter = 0;
   enableroot = 0;
@@ -144,7 +155,7 @@ void HistServer::Init(int mode, int d2pmode) {
   FirsteventIdx = 0;
   IsFirstevent = true;
   LasteventIdx = 0;
-  weventIdx = 0;
+  eventID = 0;
   weventTime = 0;
   coboIC=2;
   asadIC=1;
@@ -766,6 +777,9 @@ void HistServer::Init(int mode, int d2pmode) {
     InitTrack();
     InitMutantScaler();
   }
+#ifdef DB_FUNCTION
+  cout << "[End of Init]" << endl;
+#endif
 }
 
 void HistServer::InitWaveforms() {
@@ -911,6 +925,9 @@ void HistServer::ValidateFrame(mfm::Frame& frame) {
 }
 
 void HistServer::Event(mfm::Frame& frame) {
+#ifdef DB_FUNCTION
+  cout << "[Event]" << endl;
+#endif
   waveforms->frameIdx = 0;
   waveforms->decayIdx = 0;
   if(frame.header().isLayeredFrame()) {
@@ -923,6 +940,9 @@ void HistServer::Event(mfm::Frame& frame) {
       	if((*subFrame.get()).itemCount()>0){ //Make sure we have data
                 //cout << "2isLayered=" << frame.header().isLayeredFrame() << ", itemCount=" << frame.itemCount() << ", frameIndex=" << i << endl;
         	waveforms->frameIdx = i;
+#ifdef DB_FUNCTION
+            cout << "[Call UnpackFrame-1]" << endl;
+#endif
 		UnpackFrame(*subFrame.get());
         	RootWConvert();
         	ResetWaveforms();
@@ -938,6 +958,9 @@ void HistServer::Event(mfm::Frame& frame) {
       try{
     	if(frame.itemCount()>0){ //Make sure we have data
     	  //cout << "Not Layered Frame" << endl;
+#ifdef DB_FUNCTION
+          cout << "[Call UnpackFrame-2]" << endl;
+#endif
     	  UnpackFrame(frame);
     	  RootWConvert();
     	  ResetWaveforms();
@@ -952,34 +975,38 @@ void HistServer::Event(mfm::Frame& frame) {
 }
 
 void HistServer::UnpackFrame(mfm::Frame& frame) {
+#ifdef DB_FUNCTION
+  cout << "[UnpackFrame]" << endl;
+#endif
   UInt_t coboIdx = frame.headerField("coboIdx").value<UInt_t>();
   UInt_t asadIdx = frame.headerField("asadIdx").value<UInt_t>();
-  Int_t prevweventIdx = weventIdx;
+  Int_t eventIDPre = eventID;
   UInt_t frameSize = frame.headerField("frameSize").value<UInt_t>();
   UInt_t itemSize = frame.headerField("itemSize").value<UInt_t>();
-  weventIdx = (Int_t)frame.headerField("eventIdx").value<UInt_t>();
+  eventID = (Int_t)frame.headerField("eventIdx").value<UInt_t>();
+
   UInt_t prevweventTime = weventTime;
   weventTime = (UInt_t)frame.headerField("eventTime").value<UInt_t>();
-  //cout<<"weventIdx=" << weventIdx << ", prevweventIdx+1=" << (prevweventIdx+1) << endl;
-  //if(weventIdx>prevweventIdx+1) return;
+  //cout<<"eventID=" << eventID << ", eventIDPre+1=" << (eventIDPre+1) << endl;
+  //if(eventID>eventIDPre+1) return;
   if(IsFirstevent){
 	cout<<"FIRST EVENT!!!!!"<<endl;
-    FirsteventIdx = weventIdx;
+    FirsteventIdx = eventID;
     IsFirstevent=false;
   }
 
-  //if(enableskipevent==1 && weventIdx<firsteventno) return;
-  //if(enableskipevent==2 && weventIdx<maxevtno){
-  //if(!evtmask[weventIdx]) return;
-  //}else if(enableskipevent==2 && weventIdx>=maxevtno){
-  //  //cout << Form("weventIdx >= %d!",maxevtno) << endl;
+  //if(enableskipevent==1 && eventID<firsteventno) return;
+  //if(enableskipevent==2 && eventID<maxevtno){
+  //if(!evtmask[eventID]) return;
+  //}else if(enableskipevent==2 && eventID>=maxevtno){
+  //  //cout << Form("eventID >= %d!",maxevtno) << endl;
   //}
-  //else cout << "weventIdx " << weventIdx << endl;
+  //else cout << "eventID " << eventID << endl;
 
-  if((prevweventIdx != weventIdx)){
+  if((eventIDPre != eventID)){
     if(readmode==0){
       if(rGETMul>0){
-        rGETEventIdx = prevweventIdx;
+        rGETEventIdx = eventIDPre;
         if(prevgoodmmevt==1 || 1){
           if(enable2pmode==1){
             for(int i=prevmidx;i<mevtidx.size();i++){
@@ -1001,7 +1028,7 @@ void HistServer::UnpackFrame(mfm::Frame& frame) {
           goodicevt=0;
           goodevtidx=0;
         }else{
-          rGETEventIdx = prevweventIdx;
+          rGETEventIdx = eventIDPre;
           RootWReset();
           prevgoodmmevt = goodmmevt;
           prevgoodicevt = goodicevt;
@@ -1010,24 +1037,28 @@ void HistServer::UnpackFrame(mfm::Frame& frame) {
           goodicevt=0;
           goodevtidx=0;
         }
-        //if((rGETEventIdx-FirsteventIdx)%1000==0){
-        if((rGETEventIdx-FirsteventIdx)%50==0){
+        //if((rGETEventIdx-FirsteventIdx)%1000==0)
+        if((rGETEventIdx-FirsteventIdx)%50==0)
+        {
           if(rGETEventIdx==FirsteventIdx){
          	  cout << Form("M%d:Starting from Event No. %d.",readmode,rGETEventIdx) << endl;
           }else{
          	  cout << Form("M%d:Upto Event No. %d Converted..(from Event No. %d)",readmode,rGETEventIdx, FirsteventIdx) << endl;
           }
         }
-        rGETEventIdx = weventIdx;
+        rGETEventIdx = eventID;
         rGETMul=0;
         rGETHit=0;
         for(int i=0;i<16;i++) IsTrig[i]=0;
       }
     }else if(readmode==1){
       if(wGETMul>0){
-        wGETEventIdx = prevweventIdx;
+        wGETEventIdx = eventIDPre;
         if(prevgoodmmevt==1 || 1){
-          cout << "In data: " << wGETEventIdx << "enable2pmode: "<<enable2pmode << endl;
+          //cout << "In data: " << wGETEventIdx << " enable2pmode: "<<enable2pmode << endl;
+#ifdef DB_EVENTID
+          cout << "==In data: " << wGETEventIdx-FirsteventIdx << " (" << wGETEventIdx << ")" << " enable2pmode: "<<enable2pmode << endl;
+#endif
           if(enable2pmode==1){
 		//cout<<"mevtidx.size() = "<<mevtidx.size()<<endl;
             for(int i=prevmidx;i<mevtidx.size();i++){
@@ -1050,7 +1081,7 @@ void HistServer::UnpackFrame(mfm::Frame& frame) {
           goodicevt=0;
           goodevtidx=0;
         }else{
-          wGETEventIdx = prevweventIdx;
+          wGETEventIdx = eventIDPre;
           RootWReset();
           prevgoodmmevt = goodmmevt;
           prevgoodicevt = goodicevt;
@@ -1059,37 +1090,58 @@ void HistServer::UnpackFrame(mfm::Frame& frame) {
           goodicevt=0;
           goodevtidx=0;
         }
-        //if((wGETEventIdx-FirsteventIdx)%1000==0){
-        if((wGETEventIdx-FirsteventIdx)%50==0){
+        if((wGETEventIdx-FirsteventIdx)%1000==0)
+        //if((wGETEventIdx-FirsteventIdx)%50==0)
+        {
           if(wGETEventIdx==FirsteventIdx){
          	  cout << Form("M%d:Starting from Event No. %d.",readmode,wGETEventIdx) << endl;
           }else{
          	  cout << Form("M%d:Upto Event No. %d Converted..(from Event No. %d)",readmode,wGETEventIdx, FirsteventIdx) << endl;
           }
         }
-        wGETEventIdx = weventIdx;
+        wGETEventIdx = eventID;
         wGETMul=0;
         wGETHit=0;
         for(int i=0;i<16;i++) IsTrig[i]=0;
       }
     }
   }
-//  cout<<"Frame type: "<<frame.header().frameType()<<"\teventIdx"<<weventIdx<<endl;
+#ifdef DB_EVENTID
+  cout<<"==Frame type: "<<frame.header().frameType()<<"\teventID: "<<eventID-FirsteventIdx << " (" << eventID << ")" <<endl;
+#endif
 
-//  if(weventIdx<3350){
-//    return;
-//  }
+#ifdef EVENT_BREAK
+  if (reventIdx-FirsteventIdx > 500 || eventID-FirsteventIdx > 500) {
+      cout << "EVENT BREAK at " << reventIdx-FirsteventIdx << "  " << eventID-FirsteventIdx  << " // " << FirsteventIdx << endl;
+      return;
+  }
+#endif
+  //if(eventID<3350) return;
+
+#ifdef DB_EVENTID
+  cout<<"==Frame type: "<<frame.header().frameType()<<"\teventID: "<<eventID-FirsteventIdx << " (" << eventID << ")" <<endl;
+#endif
+
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " " << endl;
+#endif
 
   mfm::Item item = frame.itemAt(0u);
   mfm::Field field = item.field("");
 
   const size_t numSamples = frame.itemCount();
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " " << endl;
+#endif
 
   const size_t numChannels = 68u;
   const size_t numChips = 4u;
   vector<uint32_t> chanIdx_(numChips, 0u);
   vector<uint32_t> buckIdx_(numChips, 0u);
   if(frame.header().frameType() == 1u) {
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " " << endl;
+#endif
     mfm::Item item = frame.itemAt(0u);
     mfm::Field field = item.field("");
     mfm::BitField agetIdxField = field.bitField("agetIdx");
@@ -1109,7 +1161,7 @@ void HistServer::UnpackFrame(mfm::Frame& frame) {
       IsTrig[coboIdx*4+asadIdx]=0;
       waveforms->decayIdx = 0;
     }
-    //cout << "Type:" << frame.header().frameType() << " " <<  weventIdx << "  " << frameSize << " " << coboIdx << " " << asadIdx << " " << waveforms->frameIdx << " " << waveforms->decayIdx << " " << frame.itemCount() << endl;
+    //cout << "Type:" << frame.header().frameType() << " " <<  eventID << "  " << frameSize << " " << coboIdx << " " << asadIdx << " " << waveforms->frameIdx << " " << waveforms->decayIdx << " " << frame.itemCount() << endl;
     int lastaget=-1;
     for(UInt_t i=0; i<frame.itemCount(); i++) {
       item = frame.itemAt(i);
@@ -1136,12 +1188,15 @@ void HistServer::UnpackFrame(mfm::Frame& frame) {
 	if((chanIdx==11||chanIdx==22||chanIdx==45||chanIdx==56)) waveforms->hasFPN[asadIdx*4+agetIdx] = true;
 	else waveforms->hasHit[asadIdx*4+agetIdx] = true;
 	waveforms->waveform[asadIdx*4+agetIdx][chanIdx][buckIdx] = sampleValue;
-	//cout << "Type:" << frame.header().frameType() << " " <<  weventIdx << "  " << frameSize << " " << coboIdx << " " << asadIdx << " " << agetIdx << " " << chanIdx << " " << buckIdx <<  " " << sampleValue << endl;
+	//cout << "Type:" << frame.header().frameType() << " " <<  eventID << "  " << frameSize << " " << coboIdx << " " << asadIdx << " " << agetIdx << " " << chanIdx << " " << buckIdx <<  " " << sampleValue << endl;
       }
     }
 
   }
   else if (frame.header().frameType() == 2u) {
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " " << endl;
+#endif
     if(enable2pmode==1){
       if(IsTrig[coboIdx*4+asadIdx]>0){
         IsTrig[coboIdx*4+asadIdx]=2;
@@ -1154,7 +1209,7 @@ void HistServer::UnpackFrame(mfm::Frame& frame) {
       IsTrig[coboIdx*4+asadIdx]=0;
       waveforms->decayIdx = 0;
     }
-    //cout << "Type:" << frame.header().frameType() << " " <<  weventIdx << " " << frameSize << " " << coboIdx << " " << asadIdx << " " << waveforms->frameIdx << " " << waveforms->decayIdx << " " << endl;
+    //cout << "Type:" << frame.header().frameType() << " " <<  eventID << " " << frameSize << " " << coboIdx << " " << asadIdx << " " << waveforms->frameIdx << " " << waveforms->decayIdx << " " << endl;
     // Decode first item
     if(numSamples>0) {
       mfm::Item item = frame.itemAt(0u);
@@ -1201,6 +1256,9 @@ void HistServer::UnpackFrame(mfm::Frame& frame) {
     }
   }
   else {
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " " << endl;
+#endif
     cout << "Frame type " << frame.header().frameType() << " not found" << endl;
     return;
   }
@@ -4997,8 +5055,8 @@ void HistServer::RootWConvert(){
 	      rGETWaveformX[rGETMul][i] = i;
 	      rGETWaveformY[rGETMul][i] = waveforms->waveform[asad*4+aget][chan][i];
 	    }
-//            cout << weventIdx << " " << rGETMul << " " << coboIdx << " " << asad << " " << aget << " " << chan << endl;
-            //if(weventIdx==1412) cout << rGETMul << " " << rGETFrameNo[rGETMul] << " " << rGETCobo[rGETMul] << " " << rGETAsad[rGETMul] << " " << rGETAget[rGETMul] << " " << rGETChan[rGETMul] << endl;
+//            cout << eventID << " " << rGETMul << " " << coboIdx << " " << asad << " " << aget << " " << chan << endl;
+            //if(eventID==1412) cout << rGETMul << " " << rGETFrameNo[rGETMul] << " " << rGETCobo[rGETMul] << " " << rGETAsad[rGETMul] << " " << rGETAget[rGETMul] << " " << rGETChan[rGETMul] << endl;
             rGETMul++;
 	    if(chan!=11&&chan!=22&&chan!=45&&chan!=56) rGETHit++;
           }else if(readmode==1){
@@ -5014,8 +5072,8 @@ void HistServer::RootWConvert(){
 	      wGETWaveformX[wGETMul][i] = i;
 	      wGETWaveformY[wGETMul][i] = waveforms->waveform[asad*4+aget][chan][i];
 	    }
-            //cout << weventIdx << " " << wGETMul << " " << coboIdx << " " << asad << " " << aget << " " << chan << endl;
-            //if(weventIdx==1412) cout << wGETMul << " " << wGETFrameNo[wGETMul] << " " << wGETCobo[wGETMul] << " " << wGETAsad[wGETMul] << " " << wGETAget[wGETMul] << " " << wGETChan[wGETMul] << endl;
+            //cout << eventID << " " << wGETMul << " " << coboIdx << " " << asad << " " << aget << " " << chan << endl;
+            //if(eventID==1412) cout << wGETMul << " " << wGETFrameNo[wGETMul] << " " << wGETCobo[wGETMul] << " " << wGETAsad[wGETMul] << " " << wGETAget[wGETMul] << " " << wGETChan[wGETMul] << endl;
             wGETMul++;
 	    if(chan!=11&&chan!=22&&chan!=45&&chan!=56) wGETHit++;
           }
