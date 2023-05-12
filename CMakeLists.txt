@@ -5,7 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/local/etc/cmake")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 add_definitions( -DTIXML_USE_STL )
 
-include_directories(${MFMHistServer_SOURCE_DIR}/include)
+include_directories(${MFMHistServer_SOURCE_DIR}/source)
 
 set(GETDIR "/usr/local/get")
 set(GRUDIR "/usr/local/gru")
@@ -34,7 +34,7 @@ link_directories(${GETDIR}/lib)
 #include_directories(${GETDIR2})
 
 set(SRCFILES source/HistServer.cpp source/jsoncpp.cpp source/WaveletNew.cpp)
-set(HDRFILES include/HistServer.h)
+set(HDRFILES source/HistServer.h)
 
 add_executable(run_main main.cpp ${HDRFILES} ${SRCFILES})
 target_link_libraries(run_main  ${ROOT_LIBRARIES} ${FFTW_LIBRARIES} Html Spectrum XMLIO GRU MultiFrame)

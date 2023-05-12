@@ -109,12 +109,24 @@ void HistServer::processFrame(mfm::Frame &frame) {
 #endif
   //cout << "isBlobFrame=" << frame.header().isBlobFrame() << ", frameType=" << frame.header().frameType() << endl;
   if (frame.header().isBlobFrame()) {
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " # Blob frame" << endl;
+#endif
     if (frame.header().frameType() == 0x7) {
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " #  0x7" << endl;
+#endif
       decodeCoBoTopologyFrame(frame);
     } else if (frame.header().frameType()  == 0x8) {
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " #  0x8" << endl;
+#endif
       decodeMuTanTFrame(frame);
     }
   } else {
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " # " << frame.header().frameType() << endl;
+#endif
     ValidateEvent(frame);
 //    if(goodsievt==1){
     goodsievt=1;
@@ -124,6 +136,9 @@ void HistServer::processFrame(mfm::Frame &frame) {
       //cout << "Si Validated: " << dec << goodevtidx << " " << goodsievt << " " << goodicevt << endl;
       goodmmevt=1;
       Event(frame);
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " # end of good event" << endl;
+#endif
     }
     //goodmmevt=1;
     //goodicevt=1;
@@ -826,13 +841,25 @@ void HistServer::ResetWaveforms() {
 }
 
 void HistServer::ValidateEvent(mfm::Frame& frame) {
+#ifdef DB_FUNCTION
+  cout << "[ValidateEvent]" << endl;
+#endif
   if(frame.header().isLayeredFrame()) {
     unique_ptr<mfm::Frame> subFrame;
+#ifdef DB_FUNCTION
+  cout << "[ValidateEvent] item count is " << frame.itemCount() << endl;
+#endif
     for(int i = 0;i<frame.itemCount();i++) {
+#ifdef DB_FUNCTION
+      cout << "frame-" << i << endl;
+#endif
       try{
         try{
       	  subFrame = frame.frameAt(i);
         }catch (const std::exception& e){
+#ifdef DB_LOCATION
+  cout<< __FILE__ << " +" << __LINE__ << " # catch2" << endl;
+#endif
           cout << e.what() << endl;
           return;
         }
@@ -842,6 +869,9 @@ void HistServer::ValidateEvent(mfm::Frame& frame) {
 		//cout << "1no subframe" << endl;
       	}
       }catch (const std::exception& e){
+#ifdef DB_LOCATION
+    cout<< __FILE__ << " +" << __LINE__ << " # catch1" << endl;
+#endif
 	cout << e.what() << endl;
 	return;
       }
@@ -886,8 +916,9 @@ void HistServer::ValidateFrame(mfm::Frame& frame) {
   }
 
   //MM and IC data validation
-  //if(coboIdx==0 && ((hitPat_0&MMMask)||(hitPat_1&MMMask)||(hitPat_2&MMMask)||(hitPat_3&MMMask))){
-  if(coboIdx==0 && ((asadIdx==2||asadIdx==3) && hitPat_2&MMMask1) && (asadIdx==0 && (hitPat_0&MMMask)) && (asadIdx<2 && ((hitPat_1&MMMask)||(hitPat_2&MMMask)||(hitPat_3&MMMask)))){
+  //if(coboIdx==0 && ((hitPat_0&MMMask)||(hitPat_1&MMMask)||(hitPat_2&MMMask)||(hitPat_3&MMMask)))
+  if(coboIdx==0 && ((asadIdx==2||asadIdx==3) && hitPat_2&MMMask1) && (asadIdx==0 && (hitPat_0&MMMask)) && (asadIdx<2 && ((hitPat_1&MMMask)||(hitPat_2&MMMask)||(hitPat_3&MMMask))))
+  {
     goodmmevt=1;
     goodevtidx = ceventIdx;
   }
@@ -914,8 +945,9 @@ void HistServer::ValidateFrame(mfm::Frame& frame) {
 
   //MM and IC data validation
   MMMask = 0xEF; //USB 1byte
-  //if(coboIdx==0 && ((hitPat_0&MMMask)||(hitPat_1&MMMask)||(hitPat_2&MMMask)||(hitPat_3&MMMask))){
-  if(coboIdx==0 && (asadIdx==0 && (hitPat_0&MMMask)) && (asadIdx<2 && ((hitPat_1&MMMask)||(hitPat_2&MMMask)||(hitPat_3&MMMask)))){
+  //if(coboIdx==0 && ((hitPat_0&MMMask)||(hitPat_1&MMMask)||(hitPat_2&MMMask)||(hitPat_3&MMMask)))
+  if(coboIdx==0 && (asadIdx==0 && (hitPat_0&MMMask)) && (asadIdx<2 && ((hitPat_1&MMMask)||(hitPat_2&MMMask)||(hitPat_3&MMMask))))
+  {
     goodmmevt=1;
     goodevtidx = ceventIdx;
   }
@@ -931,8 +963,11 @@ void HistServer::Event(mfm::Frame& frame) {
   waveforms->frameIdx = 0;
   waveforms->decayIdx = 0;
   if(frame.header().isLayeredFrame()) {
+#ifdef DB_FUNCTION
+    cout << "Event in if" << endl;
+#endif
     for(int i = 0;i<frame.itemCount();i++) {
-      //cout << "1isLayered=" << frame.header().isLayeredFrame() << ", itemCount=" << frame.itemCount() << ", frameIndex=" << i << endl;
+      cout << "1isLayered=" << frame.header().isLayeredFrame() << ", itemCount=" << frame.itemCount() << ", frameIndex=" << i << endl;
       waveforms->frameIdx = 0;
       waveforms->decayIdx = 0;
       try{
@@ -950,11 +985,17 @@ void HistServer::Event(mfm::Frame& frame) {
 		//cout << "2no subframe" << endl;
       	}
       }catch (const std::exception& e){
+#ifdef DB_LOCATION
+      cout<< __FILE__ << " +" << __LINE__ << " # catch3" << endl;
+#endif
 	cout << e.what() << endl;
 	return;
       }
     }
   } else {
+#ifdef DB_FUNCTION
+    cout << "Event in else " << endl;
+#endif
       try{
     	if(frame.itemCount()>0){ //Make sure we have data
     	  //cout << "Not Layered Frame" << endl;
@@ -968,6 +1009,9 @@ void HistServer::Event(mfm::Frame& frame) {
 		cout << "3no subframe" << endl;
       	}
       }catch (const std::exception& e){
+#ifdef DB_LOCATION
+      cout<< __FILE__ << " +" << __LINE__ << " # catch4" << endl;
+#endif
 	cout << e.what() << endl;
 	return;
       }
