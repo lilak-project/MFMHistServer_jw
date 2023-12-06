@@ -1,4 +1,4 @@
-#define DB_LOCATION
+//#define DB_LOCATION
 #include <stdio.h>      /* for printf() and fprintf() */
 #include <stdlib.h>     /* for malloc */
 #include <ncurses.h>    /* for getch() */
@@ -270,6 +270,7 @@ int main (int argc, char **argv)
   string sreadtype = config["ReadType"].asString();
   int readtype = atoi(sreadtype.c_str());
   string mfmfilename = config["MFMFileName"].asString();
+  string outputFileName = config["OutputFileName"].asString();
   string snumfiles = config["NumberofFiles"].asString();
   int numfiles = atoi(snumfiles.c_str());
   int currfiles = 1;
@@ -319,7 +320,7 @@ int main (int argc, char **argv)
   ifstream in;
   string infname;
   string minfname;
-  string outrfname;
+  string outrfname = outputFileName;
   string outrtname;
   string slistinfname;
   string listinfname[maxfileno];
@@ -509,20 +510,20 @@ int main (int argc, char **argv)
   cout<< __FILE__ << " +" << __LINE__ << " #After Init" << endl;
 #endif
 
-  if (1) {
-    outrfname = "/home/cens-alpha-00/ejungwoo/mfm_converter/test1.root";
-  }
-  if(ScalerMode==0){
-    outrfname = "/home/cens-alpha-00/MFMHistServer/online2.root";
-    inoutrfname = "/home/cens-alpha-00/MFMHistServer/online2_et.root";
-    //outrfname = "/data/grgroup/gr01/MFMHistServer/online/online.root";
-    //inoutrfname = "/data/grgroup/gr01/MFMHistServer/online/online_et.root";
-  }else{
-    outrfname = "/home/cens-alpha-00/MFMHistServer/scaler.root";
-    inoutrfname = "/home/cens-alpha-00/MFMHistServer/scaler_et.root";
-    //outrfname = "/data/grgroup/gr01/MFMHistServer/online/scaler.root";
-    //inoutrfname = "/data/grgroup/gr01/MFMHistServer/online/scaler_et.root";
-  }
+  //if (1) {
+  //  outrfname = "/home/cens-alpha-00/ejungwoo/mfm_converter/test1.root";
+  //}
+  //if(ScalerMode==0){
+  //  outrfname = "/home/cens-alpha-00/MFMHistServer/online2.root";
+  //  inoutrfname = "/home/cens-alpha-00/MFMHistServer/online2_et.root";
+  //  //outrfname = "/data/grgroup/gr01/MFMHistServer/online/online.root";
+  //  //inoutrfname = "/data/grgroup/gr01/MFMHistServer/online/online_et.root";
+  //}else{
+  //  outrfname = "/home/cens-alpha-00/MFMHistServer/scaler.root";
+  //  inoutrfname = "/home/cens-alpha-00/MFMHistServer/scaler_et.root";
+  //  //outrfname = "/data/grgroup/gr01/MFMHistServer/online/scaler.root";
+  //  //inoutrfname = "/data/grgroup/gr01/MFMHistServer/online/scaler_et.root";
+  //}
   outrtname = "TEvent";
   inoutrtname = "TEvent";
 
@@ -656,7 +657,7 @@ int main (int argc, char **argv)
           }
           if(RootConvert==1){
             //outrfname = infname+".root";
-            outrfname = "test2.root";
+            //outrfname = "test2.root";
 	    //outrfname.replace(5,9,"CRIBdisk");
 	    //outrfname.replace(5,5,"disk01");
             cout<<"root file name="<< outrfname << ", root tree name=" << outrtname << endl;
@@ -676,6 +677,7 @@ int main (int argc, char **argv)
         buffer = (char *) malloc (size_buffer);
         currit = 0;
         while(!in.eof()) {
+          //std::cout << currit << endl;
           in.read(buffer,size_buffer);
           currit++;
         }

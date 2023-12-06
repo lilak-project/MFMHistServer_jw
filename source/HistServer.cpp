@@ -1,7 +1,7 @@
-#define DB_LOCATION
-#define DB_FUNCTION
-#define DB_EVENTID
-#define EVENT_BREAK
+//#define DB_LOCATION
+//#define DB_FUNCTION
+//#define DB_EVENTID
+//#define EVENT_BREAK
 
 #include "HistServer.h"
 #include "GSpectra.h"
