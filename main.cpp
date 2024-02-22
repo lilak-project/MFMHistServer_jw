@@ -721,49 +721,51 @@ int main (int argc, char **argv)
 #ifdef DB_LOCATION
           cout<< __FILE__ << " +" << __LINE__ << " # before while(!in.eof())" << endl;
 #endif
-        while(!in.eof()) {
+          while(!in.eof()) {
 #ifdef DB_LOCATION
-          cout<< __FILE__ << " +" << __LINE__ << " # INWHILE in while(!in.eof()) " << currit << endl;
+              cout<< __FILE__ << " +" << __LINE__ << " # INWHILE in while(!in.eof()) " << currit << endl;
 #endif
 
-          //in.read(buffer,size_buffer);
-	  int filebuffer=0;
-	  in.seekg(filebuffer, std::ios_base::cur);
-	  in.read(buffer,matrixSize);
-	  filebuffer += matrixSize;
-          currit++;
-          if(!in.eof()) {
-            try {
-	      //convServer->addDataChunk(buffer,buffer+size_buffer);
-	      convServer->addDataChunk(buffer,buffer+matrixSize);
-	    }catch (const std::exception& e){
-	      cout << e.what() << endl;
-	      return 0;
-	    }
-            if(oflcnt>50){
-              oflcnt=0;
-            }
-            oflcnt++;
-            if(currit%percent==0) cout << Form("%d%% (%d/%d) Processed..",(100*currit/maxit),currit,maxit) << endl;
-          }else if(in.gcount()>0) {
-            try {
-              convServer->addDataChunk(buffer,buffer+in.gcount());
-	    }catch (const std::exception& e){
-	      cout << e.what() << endl;
-	      return 0;
-	    }
-            if(oflcnt>50){
-              oflcnt=0;
-            }
-            oflcnt++;
-            currit=maxit;
-            cout << Form("100%s (%d/%d) Processed..","%",currit,maxit) << endl;
-	    if(mode==1){
-              //if(RootConvert==1) convServer->RootWCloseFile();
-              convServer->RootWCloseFile();
-            }
+              //in.read(buffer,size_buffer);
+              int filebuffer=0;
+              in.seekg(filebuffer, std::ios_base::cur);
+              in.read(buffer,matrixSize);
+              filebuffer += matrixSize;
+              currit++;
+              if(!in.eof()) {
+                  try {
+                      //convServer->addDataChunk(buffer,buffer+size_buffer);
+                      convServer->addDataChunk(buffer,buffer+matrixSize);
+                  }catch (const std::exception& e){
+                      cout << e.what() << endl;
+                      return 0;
+                  }
+                  if(oflcnt>50){
+                      oflcnt=0;
+                  }
+                  oflcnt++;
+                  if(currit%percent==0) cout << Form("%d%% (%d/%d) Processed..",(100*currit/maxit),currit,maxit) << endl;
+              }
+              else if(in.gcount()>0)
+              {
+                  try {
+                      convServer->addDataChunk(buffer,buffer+in.gcount());
+                  }catch (const std::exception& e){
+                      cout << e.what() << endl;
+                      return 0;
+                  }
+                  if(oflcnt>50){
+                      oflcnt=0;
+                  }
+                  oflcnt++;
+                  currit=maxit;
+                  cout << Form("100%s (%d/%d) Processed..","%",currit,maxit) << endl;
+                  if(mode==1){
+                      //if(RootConvert==1) convServer->RootWCloseFile();
+                      convServer->RootWCloseFile();
+                  }
+              }
           }
-        }
 #ifdef DB_LOCATION
           cout<< __FILE__ << " +" << __LINE__ << " # end of while(!in.eof())" << endl;
 #endif

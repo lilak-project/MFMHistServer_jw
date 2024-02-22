@@ -29,6 +29,8 @@ include_directories(${GRUDIR}/include)
 include_directories(${GRUDIR}/vigru)
 include_directories(${GRUDIR}/gsoap)
 
+include_directories(${GETDIR2})
+
 link_directories(${GRUDIR}/lib)
 link_directories(${GETDIR}/lib)
 #include_directories(${GETDIR2})
@@ -37,4 +39,4 @@ set(SRCFILES source/HistServer.cpp source/jsoncpp.cpp source/WaveletNew.cpp)
 set(HDRFILES source/HistServer.h)
 
 add_executable(run_mfm_converter main.cpp ${HDRFILES} ${SRCFILES})
-target_link_libraries(run_mfm_converter  ${ROOT_LIBRARIES} ${FFTW_LIBRARIES} Html Spectrum XMLIO GRU MultiFrame)
+target_link_libraries(run_mfm_converter ${ROOT_LIBRARIES} ${FFTW_LIBRARIES} Html Spectrum XMLIO GRU MultiFrame)
